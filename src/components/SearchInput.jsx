@@ -6,16 +6,31 @@ import { useNavigate, useParams } from "react-router-dom";
 import MicIcon from "../assets/mic.svg";
 import ImageIcon from "../assets/image.svg";
 
-const SearchInput = () => {
-    const [searchQuery,setSearchQuery] = useState("");
+const SearchInput = ({showBtn}) => {
+    const {query} = useParams();
+    const [searchQuery,setSearchQuery] = useState(query || "");
+    const navigate = useNavigate();
+
+    const searchQueryHandler = (event) => {
+        if(event.key === "Enter" && searchQuery.length > 0) {
+            navigate(`/${searchQuery}/${1}`);
+        }
+    }
+
+    const searchQueryClickHandler = () => {
+        if(searchQuery.length > 0) {
+            navigate(`/${searchQuery}/${1}`);
+        }
+    }
 
     return (
+        <>
         <div id="searchBox" className="h-[46px] w-full md:w-[584px] flex items-center gap-3 px-4 border border-[#dfe1e5] rounded-3xl hover:bg-white hover:shadow-c hover:border-0 focus-within:shadow-c focus-within:border-0">
-            <AiOutlineSearch size={18} color="#9aa-a6" />
+            <AiOutlineSearch size={18} color="#9aa0a6" />
             <input 
                 type="text" 
                 onChange={(e)=>setSearchQuery(e.target.value)} 
-                onKeyUp={(e)=>setSearchQuery(e.target.value)} 
+                onKeyUp={searchQueryHandler} 
                 value={searchQuery}
                 autoFocus
                 className="grow outline-0 text-black/[0.87]"
@@ -33,6 +48,17 @@ const SearchInput = () => {
                 <img className="h-6 w-6 cursor-pointer" src={ImageIcon} alt="" />
             </div>
         </div>
+        {showBtn && (
+            <div className="flex gap-2 text-[#3c4043] mt-8">
+                <button onClick={searchQueryClickHandler} className="h-9 px-4 bg-[#f8f9fa] text-sm rounded-md border border-[#f8f9fa] hover:border-[#dadce0] hover:shadow-c2">
+                    Google Search
+                </button>
+                <button className="h-9 px-4 bg-[#f8f9fa] text-sm rounded-md border border-[#f8f9fa] hover:border-[#dadce0] hover:shadow-c2">
+                    I'm Filling Lucky
+                </button>
+            </div>  
+        )}
+        </>
     );
 };
 
